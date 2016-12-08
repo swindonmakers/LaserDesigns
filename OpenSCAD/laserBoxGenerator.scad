@@ -20,7 +20,7 @@ module tabPattern(w, d, male) {
         translate([tabWidth*j - w2 + kerf, 0, 0])
         if (j % 2 == (male ? 1 : 0))
         square([tabWidth - 2*kerf, t+1]);
-        
+
     // make sure the corners fit
     for (i=[-1,1])
         translate([i*w/2 - t + kerf, d/2 - t + kerf,0])
@@ -35,38 +35,38 @@ module plate(size, pattern, name) {
     d = size[1];
     difference() {
         square(size, center=true);
-        
+
         // top
         tabPattern(w, d, pattern[0]);
-        
+
         // bottom
         rotate([0,0,180]) tabPattern(w, d, pattern[2]);
-        
+
         // left
         rotate([0,0,-90]) tabPattern(d, w, pattern[3]);
-        
+
         // right
         rotate([0,0,90]) tabPattern(d, w, pattern[1]);
-        
+
         // name
         text(name, valign="center", halign="center", size=fontSize);
     }
 }
 
 
-// plates 
+// plates
 // in logical layout (for sense checking design)
 
 // top
 translate([0,0.5,0])
     difference() {
         plate([width, depth], [false, false, false, false], labels[0]);
-        
+
         // pill slot
-        hull() 
+        hull()
             for (i=[-1,1])
             translate([i*20,0,0])
-            circle(3);
+            circle(3, $fn=16);
     }
 
 //left
@@ -88,5 +88,3 @@ translate([2*width/2 + depth + 1, -depth/2 - height/2])
 // bottom
 translate([0, -depth - height - 0.5])
     plate([width, depth], [false, false, false, false], labels[5]);
-
-
