@@ -145,7 +145,7 @@ union() {
 
     // back - right
     translate([iw/2 + id + iw/4 + 2*hw + t/4, -depth/2 - height/2])
-        plate([iw/2 + t/2, height], [1,0,1,2], "", [-iw/4 + t/4,0,-iw/4 + t/4,0]);
+        plate([iw/2 + t/2, height], [1,0,1,2], "", [-iw/4 - t/2,0,-iw/4 - t/2,0]);
 }
 
 
