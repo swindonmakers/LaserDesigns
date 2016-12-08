@@ -1,26 +1,27 @@
 include <moreShapes.scad>
 
 // exterior dimensions
-width = 80;
-depth = 80;
-height = 100;
+width = 70;
+depth = 70;
+height = 20;
 
-tabWidth = 8;
+tabWidth = 5;
 t = 3.4;  // material thickness
 kerf = 0.1;
 fontSize = 8;
 // text labels
-labels = ["Top","Left","Front","Right","Back","Bottom"];
+//labels = ["Top","Left","Front","Right","Back","Bottom"];
+labels = ["","","","","",""];
 
 // hinge settings
-cornerRadius = 25;
-hingeSlotLength = 20;
+cornerRadius = 20;  
+hingeSlotLength = 15;
 hingeSlotXSpacing = 2;
-hingeSlotYSpacing = 25;  // space between centres
+hingeSlotYSpacing = hingeSlotLength + 5;  // space between centres
 hingeSlotWidth = 0.01;  // make sure this is small enough to be welded into a single line
 
 // hinge calculatiomns
-hingeWidth = 2*PI*cornerRadius / 4;
+hingeWidth = (2*PI*cornerRadius / 4) * 0.90;  // ensure a bit of stretch
 hw = hingeWidth;
 
 iw = width - 2*cornerRadius;
@@ -80,7 +81,7 @@ module roundedPlate(size, pattern, name) {
         union() {
             square([width, depth-2*cornerRadius], center=true);
             square([width - 2*cornerRadius, depth], center=true);
-            roundedSquare([width - 2*t, depth - 2*t], cornerRadius, center=true);
+            #roundedSquare([width - 2*t, depth - 2*t], cornerRadius - t, center=true);
         }
     }
 }
@@ -145,7 +146,7 @@ union() {
 
     // back - right
     translate([iw/2 + id + iw/4 + 2*hw + t/4, -depth/2 - height/2])
-        plate([iw/2 + t/2, height], [1,0,1,2], "", [-iw/4 - t/2,0,-iw/4 - t/2,0]);
+        plate([iw/2 + t/2, height], [1,0,1,2], "", [-iw/4 + t + t/4,0,-iw/4 + t + t/4,0]);
 }
 
 
