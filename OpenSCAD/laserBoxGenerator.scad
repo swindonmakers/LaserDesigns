@@ -27,7 +27,7 @@ module tabPattern(w, d, male) {
 
 
 // size = [width, height]
-// pattern = true|false for male/female joints [top, right, bottom, left]
+// pattern = "m", "f", "" for male/female/no joint [top, right, bottom, left]
 module plate(size, pattern, name) {
     w = size[0];
     d = size[1];
