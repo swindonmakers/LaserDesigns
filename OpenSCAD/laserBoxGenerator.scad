@@ -8,7 +8,7 @@ labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!
 
 // sizes, 100w,100d,160h
 // sides - same order as labels above, set to false to not have that side at all
-makeBox([100,100,160], [true, true, true, true, true, true], labels);
+makeBox([100,100,160], [true, true, true, true, true, true], labels, []);
 
 module tabPattern(w, d, male) {
     n = floor(w / tabWidth);
@@ -25,6 +25,12 @@ module tabPattern(w, d, male) {
         square([2*t - 2*kerf,t+1]);
 }
 
+module scallop(w, d) {
+    // long shallow half-ellipse
+    translate([0,d/2,0])
+    resize(newsize=[w-2*tabWidth,tabWidth*2])
+        circle(r=tabWidth);
+}
 
 // size = [width, height]
 // pattern = "m", "f", "" for male/female/no joint [top, right, bottom, left]
@@ -36,7 +42,11 @@ module plate(size, pattern, name) {
 
         // top
         if(pattern[0]) {
-          tabPattern(w, d, pattern[0]);
+	    if(pattern[0] == "s") {
+	        scallop(w,d);
+            } else {
+                tabPattern(w, d, pattern[3]);
+	    }
         }
 
         // bottom
@@ -46,7 +56,7 @@ module plate(size, pattern, name) {
 
         // left
         if(pattern[3]) {
-          rotate([0,0,90]) tabPattern(d, w, pattern[3]);
+            rotate([0,0,90]) tabPattern(d, w, pattern[3]);
         }
 
         // right
@@ -61,7 +71,10 @@ module plate(size, pattern, name) {
 
 // size = [width, depth, height]
 // sides = true/false list for each of top, left, front, right, back, bottom
-module makeBox(size, sides, labels) {
+// labels = text string for the middle of each face, if required
+// scallops = true/false, make finger cut outs (eg for extracting cards from box) instead of no-tabs
+// NB: This code currently only makes finger cut outs on edges where the top is missing
+module makeBox(size, sides, labels, scallops) {
     // plates
     // in logical layout (for sense checking design)
     width = size[0];
@@ -98,7 +111,7 @@ module makeBox(size, sides, labels) {
     //front
     if(sides[2]) {
         translate([0, -depth/2 - height/2])
-             plate([width, height], [sides[0] ? "m" : "", // top
+             plate([width, height], [sides[0] ? "m" : scallops ? "s" : "", // top
                                      sides[3] ? "m" : "", // right
                                      sides[5] ? "m" : "", // bottom
                                      sides[1] ? "m" : ""  // left
@@ -116,7 +129,7 @@ module makeBox(size, sides, labels) {
     // back
     if(sides[4]) {
         translate([2*width/2 + depth + 1, -depth/2 - height/2])
-            plate([width, height], [sides[0] ? "m" : "", // top
+            plate([width, height], [sides[0] ? "m" : scallops ? "s" : "", // top
                                     sides[1] ? "m" : "", // right
                                     sides[5] ? "m" : "", // bottom
                                     sides[3] ? "m" : ""  // left
