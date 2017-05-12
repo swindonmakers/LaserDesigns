@@ -88,6 +88,17 @@ module plate(size, pattern, name, divider) {
           rotate([0,0,-90]) tabPattern(d, w, pattern[1], tabWidths[1], mainThickness);
         }
 
+        // connecting slots in divider pieces
+        echo(divider);
+        if(divider && divider == "top_slot") {
+            translate([0,d/4+kerf])
+               square([dividerThickness+1,d/2], center=true);
+        }
+        if(divider && divider == "btm_slot") {
+            translate([0,-d/4+kerf])
+                square([dividerThickness+1,d/2], center=true);
+        }
+
         // name
         text(name, valign="center", halign="center", size=fontSize);
     }
@@ -185,6 +196,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
     }
 
     // dividers (holes front/back)
+    // "join" for these means make a slot in the dividers
     if(dividers[2] && dividers[4]) {
         translate([-width/2 - depth/2 - 0.5, -depth])
             plate([depth, height],
@@ -192,7 +204,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
                   "f",
                   "m",
                   "f"
-                  ]);
+                  ], "", dividers[2] && dividers[4] && dividers[1] && dividers[3] ? "top_slot" : "");
     }
 
     // dividers (holes left/right)
@@ -203,6 +215,6 @@ module makeBox(size, sides, labels, scallops, dividers) {
                   "m",
                   "m",
                   "m"
-                  ]);
+                  ], "", dividers[2] && dividers[4] && dividers[1] && dividers[3] ? "btm_slot" : "");
     }
 }
