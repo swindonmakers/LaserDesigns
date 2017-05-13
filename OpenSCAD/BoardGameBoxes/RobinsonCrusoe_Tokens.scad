@@ -1,6 +1,6 @@
 use <../laserBoxGenerator.scad>;
 
-makeBox([20-1.5, 255-1.5, 45-1.5],
+makeBox([20+0.25, 255+0.25, 45+0.25],
         [false, true, true, true, true, true], // sides
         ["", "Tokens",], // labels
         false, // scallops

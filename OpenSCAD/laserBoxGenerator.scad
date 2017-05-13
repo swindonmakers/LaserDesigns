@@ -1,6 +1,7 @@
-mainThickness = 3.4;  // main material thickness
-dividerThickness = 1.6; // divider material thickness
-kerf = 0.1;
+mainThickness = 2.8;  // main material thickness
+dividerThickness = 2.8; // divider material thickness
+// smaller numbers -> tighter corners.
+kerf = 0.14;
 fontSize = 9;
 
 //labels = ["Top","Left","Front","Right","Back","Bottom"];
@@ -9,7 +10,7 @@ labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!
 // sizes, 100w,100d,160h
 // sides - same order as labels above, set to false to not have that side at all
 // box with all sides and labels
-makeBox([100,100,160], [true, true, true, true, true, true], labels, []);
+makeBox([20,20,20], [false, true, true, true, true, true], [], []);
 
 // box with no top and cutouts on sides, no labels
 // makeBox([100,100,100], [false, true, true, true, true, true], [], true);
