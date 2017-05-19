@@ -11,14 +11,19 @@ labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!
 // sizes, 100w,100d,160h
 // sides - same order as labels above, set to false to not have that side at all
 // box with all sides and labels
-makeBox([20,20,20], [false, true, true, true, true, true], [], []);
+makeBox(size=[20,20,20],
+        labels=labels);
 
 // box with no top and cutouts on sides, no labels
-// makeBox([100,100,100], [false, true, true, true, true, true], [], true);
+// makeBox(size=[100,100,100],
+//         sides=[false, true, true, true, true, true],
+//         scallops=true);
 
 // box with no top and single left/right divider
 // NB: Divider code assumes that you remove the top, and add dividers verticallty
-// makeBox([100,100,100], [false, true, true, true, true, true], [], false, [false, true, false, true, false, false]);
+// makeBox(size=[100,100,100],
+//         sides=[false, true, true, true, true, true],
+//         dividers=[false, true, false]);
 
 
 // calculate tabWidth base on size len:
@@ -117,7 +122,11 @@ module plate(size, pattern, name, divider, divider_count) {
 // labels = text string for the middle of each face, if required
 // scallops = true/false, make finger cut outs (eg for extracting cards from box) instead of no-tabs
 // NB: This code currently only makes finger cut outs on edges where the top is missing
-module makeBox(size, sides, labels, scallops, dividers) {
+module makeBox(size=[100,100,100],
+               sides=[true,true,true,true,true,true],
+               labels=[],
+               scallops=false,
+               dividers=[]) {
     // plates
     // in logical layout (for sense checking design)
     width = size[0];
