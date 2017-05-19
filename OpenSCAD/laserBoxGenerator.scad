@@ -3,6 +3,7 @@ dividerThickness = 2.8; // divider material thickness
 // smaller numbers -> tighter corners.
 kerf = 0.14;
 fontSize = 9;
+tabCount = 6;
 
 //labels = ["Top","Left","Front","Right","Back","Bottom"];
 labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!!"];
@@ -21,7 +22,7 @@ makeBox([20,20,20], [false, true, true, true, true, true], [], []);
 
 
 // calculate tabWidth base on size len:
-function tabWidth(n) = n>0 ? floor(n/6) : 12;
+function tabWidth(n) = n>0 && n<30 ? floor(n/tabCount) : 12;
 
 module tabPattern(w, d, male, tabWidth, thickness) {
     n = floor(w / tabWidth);
