@@ -88,24 +88,28 @@ module plate(size, pattern, name, divider, divider_count) {
         // Extra gubbins if this plate will connect to a divider
         // mid-plate front/back slots for divider end
         if(divider && (divider == "fb" || divider == "both")) {
-            translate([0, d/2])
+           for (i = [1:divider_count-1]) {
+             translate([0, i*d/divider_count])
                 rotate([0,0,180]) tabPattern(w, d, pattern[2], tabWidths[0], dividerThickness);
-
+           }
         }
 
         // mid-plate left/right slots for divider end
+        // count = 3, 1/3,2/3
         if(divider == true || divider == "both" || divider == "lr") {
-            translate([w/2,0])
+           for (i = [1:divider_count-1]) {
+            translate([i*w/divider_count,0])
                rotate([0,0,90]) tabPattern(d, w, pattern[3], tabWidths[1], dividerThickness);
-
+}
         }
 
         // Extra gubbins if this plate is itself a divider
         // connecting slots between two divider pieces
         // NB This is 0, d/4 because the square is center=true
         if(divider && divider == "top_slot") {
-            translate([0,d/4+kerf])
-               square([dividerThickness+1,d/2], center=true);
+// FIXME            for (i=[1:divider_count-1])
+              translate([0,d/4+kerf])
+                square([dividerThickness+1,d/2], center=true);
         }
         if(divider && divider == "btm_slot") {
             translate([0,-d/4+kerf])
@@ -126,7 +130,8 @@ module makeBox(size=[100,100,100],
                sides=[true,true,true,true,true,true],
                labels=[],
                scallops=false,
-               dividers=[]) {
+               dividers=[],
+               divider_count=2) {
     // plates
     // in logical layout (for sense checking design)
     width = size[0];
@@ -144,7 +149,7 @@ module makeBox(size=[100,100,100],
                        sides[2] ? "f" : "", // bottom
                        sides[1] ? "f" : "" // left
                       ],
-                      labels[0], dividers[0], dividers[6]);
+                      labels[0], dividers[0], divider_count);
 
                 // pill slot
                 hull()
@@ -161,7 +166,7 @@ module makeBox(size=[100,100,100],
                    sides[2] ? "f" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[4] ? "f" : "" // left
-                  ], labels[1], dividers[1], dividers[6]);
+                  ], labels[1], dividers[1], divider_count);
     }
     //front
     if(sides[2]) {
@@ -171,7 +176,7 @@ module makeBox(size=[100,100,100],
                     sides[3] ? "m" : "", // right
                     sides[5] ? "m" : "", // bottom
                     sides[1] ? "m" : ""  // left
-                   ], labels[2], dividers[2], dividers[6]);
+                   ], labels[2], dividers[2], divider_count);
     }
     //right
     if(sides[3]) {
@@ -181,7 +186,7 @@ module makeBox(size=[100,100,100],
                    sides[4] ? "f" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[2] ? "f" : ""  // left
-                  ], labels[3], dividers[3], dividers[6]);
+                  ], labels[3], dividers[1], divider_count);
     }
     // back
     if(sides[4]) {
@@ -191,7 +196,7 @@ module makeBox(size=[100,100,100],
                    sides[1] ? "m" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[3] ? "m" : ""  // left
-                  ], labels[4], dividers[4], dividers[6]);
+                  ], labels[4], dividers[2], divider_count);
     }
     // bottom
     if(sides[5]) {
@@ -203,36 +208,39 @@ module makeBox(size=[100,100,100],
                    sides[4] ? "f" : "", // bottom
                    sides[1] ? "f" : ""  // left
                   ], labels[5],
-                  dividers[2] && dividers[4] && dividers[1] && dividers[3]
+                  dividers[2] && dividers[1]
                   ? "both"
-                  : dividers[1] && dividers[3]
+                  : dividers[1]
                     ? "fb"
-                    : dividers[2] && dividers[4]
+                    : dividers[2]
                       ? "lr"
-                      : "", dividers[6]);
+                      : "", divider_count);
     }
 
     // dividers (holes front/back)
     // "slot" for these means make a slot in the dividers
-    if(dividers[2] && dividers[4]) {
-//        for(i=[1:dividers[6]])
-        translate([-width/2 - depth/2 - 0.5, -depth])
+    if(dividers[2]) {
+      for(i=[1:divider_count-1]) {
+        translate([-width/2 - depth/2 - 0.5, -i*depth+mainThickness])
             plate([depth, height],
                   ["",
                   "f",
                   "m",
                   "f"
-                  ], "", dividers[2] && dividers[4] && dividers[1] && dividers[3] ? "top_slot" : "", dividers[6]);
+                  ], "", dividers[2] && dividers[1] ? "top_slot" : "", divider_count);
+      }
     }
 
     // dividers (holes left/right)
-    if(dividers[1] && dividers[3]) {
-        translate([2*width/2 + depth + 1, -depth])
+    if(dividers[1]) {
+      for(i=[1:divider_count-1]) {
+        translate([2*width/2 + depth + 1, -(i+1)*(depth/2)])
             plate([width, height],
                   ["",
                   "m",
                   "m",
                   "m"
-                  ], "", dividers[2] && dividers[4] && dividers[1] && dividers[3] ? "btm_slot" : "", dividers[6]);
+                  ], "", dividers[2] && dividers[1] ? "btm_slot" : "", divider_count);
+      }
     }
 }
