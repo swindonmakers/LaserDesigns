@@ -1,7 +1,9 @@
-mainThickness = 3.4;  // main material thickness
-dividerThickness = 1.6; // divider material thickness
-kerf = 0.1;
+mainThickness = 2.8;  // main material thickness
+dividerThickness = 2.8; // divider material thickness
+// smaller numbers -> tighter corners.
+kerf = 0.14;
 fontSize = 9;
+tabCount = 6;
 
 //labels = ["Top","Left","Front","Right","Back","Bottom"];
 labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!!"];
@@ -9,18 +11,23 @@ labels = ["","Laser Material","Donations","Laser Material","Donations","LAZOORS!
 // sizes, 100w,100d,160h
 // sides - same order as labels above, set to false to not have that side at all
 // box with all sides and labels
-makeBox([100,100,160], [true, true, true, true, true, true], labels, []);
+makeBox(size=[20,20,20],
+        labels=labels);
 
 // box with no top and cutouts on sides, no labels
-// makeBox([100,100,100], [false, true, true, true, true, true], [], true);
+// makeBox(size=[100,100,100],
+//         sides=[false, true, true, true, true, true],
+//         scallops=true);
 
 // box with no top and single left/right divider
 // NB: Divider code assumes that you remove the top, and add dividers verticallty
-// makeBox([100,100,100], [false, true, true, true, true, true], [], false, [false, true, false, true, false, false]);
+// makeBox(size=[100,100,100],
+//         sides=[false, true, true, true, true, true],
+//         dividers=[false, true, false]);
 
 
 // calculate tabWidth base on size len:
-function tabWidth(n) = n>0 ? floor(n/6) : 12;
+function tabWidth(n) = n>0 && n<30 ? floor(n/tabCount) : 12;
 
 module tabPattern(w, d, male, tabWidth, thickness) {
     n = floor(w / tabWidth);
@@ -46,7 +53,8 @@ module scallop(w, d, tabWidth) {
 
 // size = [width, height]
 // pattern = "m", "f", "" for male/female/no joint [top, right, bottom, left]
-module plate(size, pattern, name, divider) {
+module plate(size, pattern, name, divider_count) {
+    echo("plate:", size, pattern, name, divider_count);
     w = size[0];
     d = size[1];
     tabWidths = [ for (x = [0 : len(size)-1]) tabWidth(size[x]) ];
@@ -66,21 +74,11 @@ module plate(size, pattern, name, divider) {
         // bottom
         if(pattern[2]) {
           rotate([0,0,180]) tabPattern(w, d, pattern[2], tabWidths[0], mainThickness);
-          if(divider && (divider == "fb" || divider == "both")) {
-              translate([0, d/2])
-                  rotate([0,0,180]) tabPattern(w, d, pattern[2], tabWidths[0], dividerThickness);
-                
-            }
         }
 
         // left
         if(pattern[3]) {
             rotate([0,0,90]) tabPattern(d, w, pattern[3], tabWidths[1], mainThickness);
-            if(divider == true || divider == "both" || divider == "lr") {
-                translate([w/2,0])
-                   rotate([0,0,90]) tabPattern(d, w, pattern[3], tabWidths[1], dividerThickness);
-                
-            }
         }
 
         // right
@@ -88,6 +86,52 @@ module plate(size, pattern, name, divider) {
           rotate([0,0,-90]) tabPattern(d, w, pattern[1], tabWidths[1], mainThickness);
         }
 
+        // Extra gubbins if this plate will connect to a divider
+           for (i = [1:1:divider_count[1]]) {
+             echo("p5", pattern[5]);
+             translate([0, i*d/(divider_count[1]+1)])
+                if(pattern[5] == "btm_slot") {
+                  translate([0,-d/4+kerf])
+                    square([dividerThickness+1,d/2]);
+                } else if(pattern[5] == "btm_slot") {
+                  translate([0,-d/4+kerf])
+                    square([dividerThickness+1,d/2]);
+                } else {
+                  rotate([0,0,180]) tabPattern(w, d, pattern[2], tabWidths[0], dividerThickness);
+                }
+           }
+
+        // mid-plate front/back slots for divider end
+        // count = 3, 1/3,2/3
+           for (i = [1:1:divider_count[0]]) {
+            translate([i*w/(divider_count[0]+1),0])
+                if(pattern[4] == "top_slot") {
+                  echo("top_slot");
+                  translate([-w/2,0])
+                    square([dividerThickness+1,d/2]);
+                } else if(pattern[4] == "btm_slot") {
+                  echo("btm_slot");
+                  translate([-w/2,-d/2])
+                    square([dividerThickness+1,d/2]);
+                } else {
+                  rotate([0,0,90]) tabPattern(d, w, pattern[3], tabWidths[1], dividerThickness);
+                }
+           }
+
+/*
+        // Extra gubbins if this plate is itself a divider
+        // connecting slots between two divider pieces
+        // NB This is 0, d/4 because the square is center=true
+        if(divider_count && divider == "top_slot") {
+// FIXME            for (i=[1:divider_count-1])
+              translate([0,d/4+kerf])
+                square([dividerThickness+1,d/2], center=true);
+        }
+        if(divider && divider == "btm_slot") {
+            translate([0,-d/4+kerf])
+                square([dividerThickness+1,d/2], center=true);
+        }
+*/
         // name
         text(name, valign="center", halign="center", size=fontSize);
     }
@@ -98,7 +142,11 @@ module plate(size, pattern, name, divider) {
 // labels = text string for the middle of each face, if required
 // scallops = true/false, make finger cut outs (eg for extracting cards from box) instead of no-tabs
 // NB: This code currently only makes finger cut outs on edges where the top is missing
-module makeBox(size, sides, labels, scallops, dividers) {
+module makeBox(size=[100,100,100],
+               sides=[true,true,true,true,true,true],
+               labels=[],
+               scallops=false,
+               divider_count=[0,2]) {
     // plates
     // in logical layout (for sense checking design)
     width = size[0];
@@ -116,7 +164,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
                        sides[2] ? "f" : "", // bottom
                        sides[1] ? "f" : "" // left
                       ],
-                      labels[0], dividers[0]);
+                      labels[0], [divider_count[2], divider_count[1]]);
 
                 // pill slot
                 hull()
@@ -126,14 +174,15 @@ module makeBox(size, sides, labels, scallops, dividers) {
             }
     }
     //left
+    echo("left");
     if(sides[1]) {
         translate([-width/2 - depth/2 - 0.5, -depth/2 - height/2])
-            plate([depth, height],
+            #plate([depth, height],
                   [sides[0] ? "m" : "", // top
                    sides[2] ? "f" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[4] ? "f" : "" // left
-                  ], labels[1], dividers[1]);
+                  ], labels[1], [ divider_count[1], divider_count[0] ]);
     }
     //front
     if(sides[2]) {
@@ -143,7 +192,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
                     sides[3] ? "m" : "", // right
                     sides[5] ? "m" : "", // bottom
                     sides[1] ? "m" : ""  // left
-                   ], labels[2], dividers[2]);
+                   ], labels[2], [ divider_count[2], divider_count[0]]);
     }
     //right
     if(sides[3]) {
@@ -153,7 +202,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
                    sides[4] ? "f" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[2] ? "f" : ""  // left
-                  ], labels[3], dividers[3]);
+                  ], labels[3], [ divider_count[1], divider_count[0] ]);
     }
     // back
     if(sides[4]) {
@@ -163,7 +212,7 @@ module makeBox(size, sides, labels, scallops, dividers) {
                    sides[1] ? "m" : "", // right
                    sides[5] ? "m" : "", // bottom
                    sides[3] ? "m" : ""  // left
-                  ], labels[4], dividers[4]);
+                  ], labels[4], [ divider_count[2], divider_count[0]]);
     }
     // bottom
     if(sides[5]) {
@@ -175,34 +224,37 @@ module makeBox(size, sides, labels, scallops, dividers) {
                    sides[4] ? "f" : "", // bottom
                    sides[1] ? "f" : ""  // left
                   ], labels[5],
-                  dividers[2] && dividers[4] && dividers[1] && dividers[3]
-                  ? "both"
-                  : dividers[1] && dividers[3]
-                    ? "fb"
-                    : dividers[2] && dividers[4]
-                      ? "lr"
-                      : "");
-    }
+                  [divider_count[2], divider_count[1]]);
+             }
 
     // dividers (holes front/back)
-    if(dividers[2] && dividers[4]) {
-        translate([-width/2 - depth/2 - 0.5, -depth])
+    // "slot" for these means make a slot in the dividers
+    //if(divider_count[2]) {
+      for(i=[1:1:divider_count[2]]) {
+        translate([-width/2 - depth/2 - 0.5, -i*depth+mainThickness])
             plate([depth, height],
                   ["",
                   "f",
                   "m",
-                  "f"
-                  ]);
-    }
+                  "f",
+                  "top_slot",
+                  ""
+                  ], "", [ divider_count[1], divider_count[0] ]);
+      }
+    //}
 
     // dividers (holes left/right)
-    if(dividers[1] && dividers[3]) {
-        translate([2*width/2 + depth + 1, -depth])
+    //if(divider_count[1]) {
+      for(i=[1:1:divider_count[1]]) {
+        translate([2*width/2 + depth + 1, -(i+1)*(depth/2)])
             plate([width, height],
                   ["",
                   "m",
                   "m",
-                  "m"
-                  ]);
-    }
+                  "m",
+                  "btm_slot",
+                  ""
+                  ], "", [ divider_count[2], divider_count[0]]);
+      }
+    //}
 }
