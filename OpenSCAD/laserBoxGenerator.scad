@@ -27,7 +27,7 @@ makeBox(size=[20,20,20],
 
 
 // calculate tabWidth base on size len:
-function tabWidth(n) = n>0 && n<30 ? floor(n/tabCount) : 12;
+function tabWidth(n) = n>0 && n<60 ? floor(n/tabCount) : 12;
 
 module tabPattern(w, d, male, tabWidth, thickness) {
     n = floor(w / tabWidth);
