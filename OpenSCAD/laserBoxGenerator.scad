@@ -36,7 +36,7 @@ module tabPattern(w, d, male, tabWidth, thickness) {
         for (j=[0:n])
         translate([tabWidth*j - w2 + kerf, 0, 0])
         if (j % 2 == (male == "m" ? 1 : 0))
-        square([tabWidth - 2*kerf, thickness+1]);
+        square([tabWidth - 2*kerf, thickness+kerf]);
 
     // make sure the corners fit
     for (i=[-1,1])
@@ -118,20 +118,6 @@ module plate(size, pattern, name, divider_count) {
                 }
            }
 
-/*
-        // Extra gubbins if this plate is itself a divider
-        // connecting slots between two divider pieces
-        // NB This is 0, d/4 because the square is center=true
-        if(divider_count && divider == "top_slot") {
-// FIXME            for (i=[1:divider_count-1])
-              translate([0,d/4+kerf])
-                square([dividerThickness+1,d/2], center=true);
-        }
-        if(divider && divider == "btm_slot") {
-            translate([0,-d/4+kerf])
-                square([dividerThickness+1,d/2], center=true);
-        }
-*/
         // name
         text(name, valign="center", halign="center", size=fontSize);
     }
@@ -229,9 +215,8 @@ module makeBox(size=[100,100,100],
 
     // dividers (holes front/back)
     // "slot" for these means make a slot in the dividers
-    //if(divider_count[2]) {
       for(i=[1:1:divider_count[2]]) {
-        translate([-width/2 - depth/2 - 0.5, -i*depth+mainThickness])
+        translate([-width/2 - depth/2 - 2, -i*depth+mainThickness])
             plate([depth, height],
                   ["",
                   "f",
@@ -241,10 +226,8 @@ module makeBox(size=[100,100,100],
                   ""
                   ], "", [ divider_count[1], divider_count[0] ]);
       }
-    //}
 
     // dividers (holes left/right)
-    //if(divider_count[1]) {
       for(i=[1:1:divider_count[1]]) {
         translate([2*width/2 + depth + 1, -(i+1)*(depth/2)])
             plate([width, height],
@@ -256,5 +239,4 @@ module makeBox(size=[100,100,100],
                   ""
                   ], "", [ divider_count[2], divider_count[0]]);
       }
-    //}
 }
