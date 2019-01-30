@@ -29,6 +29,24 @@ makeBox(size=[20,20,20],
 // calculate tabWidth base on size len:
 function tabWidth(n) = n>0 && n<60 ? floor(n/tabCount) : 12;
 
+module edge(w, d, kind, tabWidth, thickness) {
+    if (kind == "m" || kind == "f") {
+        tabPattern(w, d, kind, tabWidth, thickness);
+    } else if (kind == "") {
+        // do nothing
+    } else if (kind == "s") {
+        scallop(w, d, tabWidth);
+    } else if (kind == "btm_slot") {
+        translate([0, 0])
+          square([dividerThickness+1, d/2]);
+    } else if (kind == "top_slot") {
+        translate([0, -d/4+kerf])
+          square([dividerThickness+1, d/2]);
+    } else {
+        assert("Unknown edge kind"+kind);
+    }
+}
+
 module tabPattern(w, d, male, tabWidth, thickness) {
     n = floor(w / tabWidth);
     w2 = (n-1)*(tabWidth)/2 + (n%2 ==0 ? tabWidth/2 : 0);
@@ -53,6 +71,8 @@ module scallop(w, d, tabWidth) {
 
 // size = [width, height]
 // pattern = "m", "f", "" for male/female/no joint [top, right, bottom, left]
+// name = label to add on the middle of this face
+// divider_count = [bottom_top, left_right] = counts
 module plate(size, pattern, name, divider_count) {
     echo("plate:", size, pattern, name, divider_count);
     w = size[0];
@@ -63,28 +83,16 @@ module plate(size, pattern, name, divider_count) {
         square(size, center=true);
 
         // top
-        if(pattern[0]) {
-            if(pattern[0] == "s") {
-                scallop(w,d,tabWidths[1]*2);
-            } else {
-                tabPattern(w, d, pattern[0], tabWidths[0], mainThickness);
-            }
-        }
-
-        // bottom
-        if(pattern[2]) {
-          rotate([0,0,180]) tabPattern(w, d, pattern[2], tabWidths[0], mainThickness);
-        }
-
-        // left
-        if(pattern[3]) {
-            rotate([0,0,90]) tabPattern(d, w, pattern[3], tabWidths[1], mainThickness);
-        }
+        rotate([0,0,  0]) edge(w, d, pattern[0], tabWidths[0], mainThickness);
 
         // right
-        if(pattern[1]) {
-          rotate([0,0,-90]) tabPattern(d, w, pattern[1], tabWidths[1], mainThickness);
-        }
+        rotate([0,0,-90]) edge(d, w, pattern[1], tabWidths[1], mainThickness);
+
+        // bottom
+        rotate([0,0,180]) edge(w, d, pattern[2], tabWidths[0], mainThickness);
+
+        // left
+        rotate([0,0,90]) edge(d, w, pattern[3], tabWidths[1], mainThickness);
 
         // Extra gubbins if this plate will connect to a divider
            for (i = [1:1:divider_count[1]]) {
