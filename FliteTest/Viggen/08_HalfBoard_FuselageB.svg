@@ -14,7 +14,7 @@
    viewBox="0 0 500 380"
    version="1.1"
    id="svg15576"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="08_HalfBoard_FuselageB.svg">
   <defs
      id="defs15570" />
@@ -25,16 +25,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="211.18015"
-     inkscape:cy="1527.751"
+     inkscape:zoom="0.35"
+     inkscape:cx="93.560742"
+     inkscape:cy="1026.7844"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g1640"
      showgrid="false"
-     inkscape:window-width="3840"
-     inkscape:window-height="2115"
-     inkscape:window-x="2515"
-     inkscape:window-y="-13"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata15573">
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -89,14 +89,14 @@
          inkscape:connector-curvature="0"
          id="path1487"
          d="m 109.3926,-155.05961 3.01346,-66.79917 -0.1016,-0.004 -4.83235,-0.17145 1.23472,-25.44409 4.83235,0.17145 h 0.0152 l 6.0205,-133.45583 -0.0868,-0.004 -4.832,-0.1718 1.23473,-25.4441 c 0,0 4.83199,0.1718 4.83199,0.17215 l 3.8735,-85.87104 h 39.88047 54.69326 59.83252 54.69325 39.88012 l 3.87173,85.81354 0.18451,-0.008 4.83199,-0.17145 1.23472,25.44409 -4.83199,0.17145 -0.27129,0.0109 6.02121,133.45548 0.19932,-0.008 4.832,-0.1718 1.23472,25.4441 -4.832,0.1718 -0.28645,0.0106 3.01487,66.83015"
-         style="fill:none;stroke:#231f20;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:none;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
       <g
          transform="matrix(0,0.35277777,0.35277777,0,238.69988,-413.67518)"
          id="g2591">
         <path
            inkscape:connector-curvature="0"
            id="path2593"
-           style="fill:none;stroke:#231f20;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
            d="M 0,0 -26.327,0.355 -26.274,-13.35 0,-13.705" />
       </g>
       <g
@@ -105,7 +105,7 @@
         <path
            inkscape:connector-curvature="0"
            id="path2597"
-           style="fill:none;stroke:#231f20;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
            d="M 0,0 26.327,-0.354 26.274,13.351 0,13.705" />
       </g>
       <g
@@ -114,7 +114,7 @@
         <path
            inkscape:connector-curvature="0"
            id="path2609"
-           style="fill:none;stroke:#231f20;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
            d="M 0,0 26.108,0.445 26.104,-13.26 0,-13.705" />
       </g>
       <g
@@ -123,7 +123,7 @@
         <path
            inkscape:connector-curvature="0"
            id="path2613"
-           style="fill:none;stroke:#231f20;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
            d="M 0,0 -26.492,-0.451 -26.49,13.253 0,13.706" />
       </g>
       <path
